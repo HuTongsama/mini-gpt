@@ -6,6 +6,7 @@ class SingleHeadAttention(nn.Module):
         self,
         d_model: int,
         head_dim: int,
+        causal: bool = False
     ):
         super().__init__()
         if d_model <= 0:
@@ -16,6 +17,7 @@ class SingleHeadAttention(nn.Module):
         self.k_proj = nn.Linear(d_model, head_dim, bias=False)
         self.v_proj = nn.Linear(d_model, head_dim, bias=False)
         self.scale = head_dim ** 0.5
+        self.causal = causal
 
     def forward(
         self,
@@ -27,6 +29,11 @@ class SingleHeadAttention(nn.Module):
 
         scale_q = q / self.scale
         attn_weights = torch.matmul(scale_q, k.transpose(-2, -1))
+        if self.causal:
+            rows, cols = attn_weights.size()[-2:]
+            all_positions = torch.ones(rows, cols, device=attn_weights.device)
+            mask = torch.triu(all_positions, diagonal=1)
+            attn_weights = attn_weights.masked_fill(mask == 1, float('-inf'))
         attn_weights = torch.softmax(attn_weights, dim=-1)
         out = torch.matmul(attn_weights, v)
         return out
