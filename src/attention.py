@@ -1,5 +1,6 @@
 from torch import nn
 import torch
+from .validate import validate_positive_int
 
 class SingleHeadAttention(nn.Module):
     def __init__(
@@ -8,11 +9,11 @@ class SingleHeadAttention(nn.Module):
         head_dim: int,
         causal: bool = False
     ):
+        
+        validate_positive_int("d_model", d_model)
+        validate_positive_int("head_dim", head_dim)
+        
         super().__init__()
-        if d_model <= 0:
-            raise ValueError("d_model must be positive")
-        if head_dim <= 0:
-            raise ValueError("head_dim must be positive")
         self.q_proj = nn.Linear(d_model, head_dim, bias=False)
         self.k_proj = nn.Linear(d_model, head_dim, bias=False)
         self.v_proj = nn.Linear(d_model, head_dim, bias=False)

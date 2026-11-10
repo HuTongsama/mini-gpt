@@ -1,8 +1,14 @@
 import torch
 from torch import nn
+from .validate import validate_positive_int
 
 class InputEmbedding(nn.Module):
     def __init__(self, vocab_size, context_size, embedding_dim):
+        
+        validate_positive_int("vocab_size", vocab_size)
+        validate_positive_int("context_size", context_size)
+        validate_positive_int("embedding_dim", embedding_dim)
+
         super().__init__()
         self.token_embedding = nn.Embedding(vocab_size, embedding_dim)
         self.position_embedding = nn.Embedding(context_size, embedding_dim)
