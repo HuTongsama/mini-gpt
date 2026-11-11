@@ -1,5 +1,5 @@
 from pathlib import Path
-from .validate import validate_real_range, validate_non_negative_int, validate_positive_int
+from .validate import validate_range, validate_non_negative_int, validate_positive_int
 from collections.abc import Sequence
 import torch
 from torch.utils.data import Dataset
@@ -11,7 +11,7 @@ def read_text_utf8(path: str | Path) -> str:
     return ""
 
 def split_text(text: str, train_fraction: float = 0.9) -> tuple[str, str]:
-    validate_real_range("train_fraction", train_fraction, 0.0, 1.0, include_min=False, include_max=False)
+    validate_range("train_fraction", train_fraction, 0.0, 1.0, include_min=False, include_max=False)
     split_idx = int(len(text) * train_fraction)
     if split_idx == 0 or split_idx == len(text):
         raise ValueError("text or train_fraction results in an failed split")

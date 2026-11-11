@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from .attention import MultiHeadAttention
-from .validate import validate_positive_int, validate_float_range
+from .validate import validate_positive_int, validate_range
 
 class MLP(nn.Module):
     def __init__(
@@ -13,7 +13,7 @@ class MLP(nn.Module):
 
         validate_positive_int("d_model", d_model)
         validate_positive_int("hidden_dim", hidden_dim)
-        validate_float_range("dropout", dropout, 0.0, 1.0, include_min=True, include_max=False)
+        validate_range("dropout", dropout, 0.0, 1.0, include_min=True, include_max=False)
         
         super().__init__()
         self.fc1 = nn.Linear(d_model, hidden_dim)
@@ -41,7 +41,7 @@ class TransformerBlock(nn.Module):
         validate_positive_int("d_model", d_model)
         validate_positive_int("num_heads", num_heads)
         validate_positive_int("mlp_hidden_dim", mlp_hidden_dim)
-        validate_float_range("dropout", dropout, 0.0, 1.0, include_min=True, include_max=False)
+        validate_range("dropout", dropout, 0.0, 1.0, include_min=True, include_max=False)
 
         super().__init__()
         self.attn = MultiHeadAttention(d_model, num_heads, causal)

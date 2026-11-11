@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from .validate import validate_positive_int, validate_float_range, validate_boolean
+from .validate import validate_positive_int, validate_range, validate_boolean
 from .embedding import InputEmbedding
 from .transformer import TransformerBlock
 
@@ -22,7 +22,7 @@ class MiniGPT(nn.Module):
         validate_positive_int("num_layers", num_layers)
         validate_positive_int("num_heads", num_heads)
         validate_positive_int("mlp_hidden_dim", mlp_hidden_dim)
-        validate_float_range("dropout", dropout, 0.0, 1.0, include_min=True, include_max=False)
+        validate_range("dropout", dropout, 0.0, 1.0, include_min=True, include_max=False)
         validate_boolean("causal", causal)
 
         super().__init__()
